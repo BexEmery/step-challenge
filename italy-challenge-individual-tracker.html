@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Italy Challenge – Individual Tracker</title>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<style>
+ body { margin: 0; font-family: Arial, sans-serif; }
+ #map { height: 100vh; width: 100%; }
+ .popup-content img { width: 100%; border-radius: 6px; margin-top: 6px; }
+ .popup-content h3 { margin: 0; font-size: 16px; }
+
+ .legend {
+   position: absolute;
+   bottom: 20px;
+   right: 20px;
+   background: white;
+   padding: 12px 14px;
+   border-radius: 8px;
+   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+   font-size: 14px;
+   z-index: 1000;
+ }
+ .legend-item { display: flex; align-items: center; margin-bottom: 6px; }
+ .legend-colour { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+/* --------------------------------------------------
+   LEADERBOARD PANEL
+-------------------------------------------------- */
+.leaderboard {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  padding: 12px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  font-size: 14px;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.leaderboard h4 {
+  margin: 0 0 10px 0;
+  font-size: 15px;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.leaderboard-team {
+  display: flex;
+  align-items: center;
+}
+
+.leaderboard-colour {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.leaderboard-rank {
+  font-weight: bold;
+  margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="individualLeaderboard" class="leaderboard">
+  <h4>Top 3 Individuals</h4>
+</div>
+<div class="legend">
+ <div class="legend-item"><span class="legend-colour" style="background:red"></span>Red Team</div>
+ <div class="legend-item"><span class="legend-colour" style="background:blue"></span>Blue Team</div>
+ <div class="legend-item"><span class="legend-colour" style="background:green"></span>Green Team</div>
+ <div class="legend-item"><span class="legend-colour" style="background:yellow"></span>Yellow Team</div>
+ <div class="legend-item"><span class="legend-colour" style="background:purple"></span>Purple Team</div>
+ <div class="legend-item"><span class="legend-colour" style="background:orange"></span>Orange Team</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// Custom START icon
+const startIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32]
+});
+
+// ✅ Custom FINISH (TROPHY) icon
+const finishIcon = L.icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/512/2583/2583344.png",
+  iconSize: [34, 34],
+  iconAnchor: [17, 34],
+  popupAnchor: [0, -34]
+});
+const map = L.map("map").setView([44.5, 11.5], 6);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+ attribution: "© OpenStreetMap contributors",
+ maxZoom: 18
+}).addTo(map);
+
+const milestones = [
+ {
+  km: 0,
+  name: "Castelluccio",
+  type: "start",
+  coords: [42.816, 13.28],
+  img: "images/castelluccio.jpg",
+  info: "Castelluccio di Norcia is a village in Umbria, Italy, known for its stunning landscapes and the phenomenon of the Fiorita, a spectacular natural event where the plains turn into a sea of wildflowers each summer."
+ },
+ {
+  km: 183,
+  name: "San Leo",
+  coords: [43.896, 12.343],
+  img: "images/san_leo.jpg",
+  info: "San Leo is a historic town in the Marecchia Valley, renowned for its impressive fortress and panoramic views. Its dramatic cliffs and single access road made it a powerful strategic stronghold throughout history."
+ },
+ {
+  km: 283,
+  name: "Dozza",
+  coords: [44.351, 11.628],
+  img: "images/dozza.jpg",
+  info: "Dozza is famous for its medieval Rocca Sforzesca and the Biennale del Muro Dipinto, where artists create murals directly on the town’s buildings, turning the village into a living open‑air art gallery."
+ },
+ {
+  km: 593,
+  name: "Cortina d'Ampezzo",
+  coords: [46.54, 12.14],
+  img: "images/cortina_d_ampezzo.jpg",
+  info: "Cortina d’Ampezzo is a historic alpine town surrounded by the Dolomites, known internationally for winter sports, mountain scenery, and year‑round outdoor tourism."
+ },
+ {
+  km: 835,
+  name: "Sirmione",
+  coords: [45.492, 10.609],
+  img: "images/sirmione.jpg",
+  info: "Sirmione sits on Lake Garda and is famous for its 13th‑century Scaligero Castle and the Grottoes of Catullus, remnants of a Roman villa overlooking the lake."
+ },
+ {
+  km: 1084,
+  name: "Neive",
+  coords: [44.727, 8.115],
+  img: "images/neive.jpg",
+  info: "Neive is a medieval village in the Langhe region and part of I Borghi più belli d’Italia, celebrated for its wine heritage including Barbaresco, Barbera, and Moscato d’Asti."
+ },
+ {
+  km: 1229,
+  name: "Portofino",
+  coords: [44.303, 9.209],
+  img: "images/portofino.jpg",
+  info: "Portofino is a historic harbour village once controlled by powerful Genoese families, known for its sheltered bay and long maritime tradition."
+ },
+ {
+  km: 1291,
+  name: "Manarola",
+  coords: [44.107, 9.729],
+  img: "images/manarola.jpg",
+  info: "Manarola is a colourful cliffside village in the Cinque Terre, known for Sciacchetrà wine, coastal trails, and one of the world’s largest illuminated nativity scenes."
+ },
+ {
+  km: 1445,
+  name: "San Gimignano",
+  coords: [43.467, 11.043],
+  img: "images/san_gimignano.jpg",
+  info: "San Gimignano is a UNESCO World Heritage Site known for its medieval towers and Vernaccia wine. It flourished as a trading hub along the Via Francigena pilgrimage route."
+ },
+ {
+  km: 1591,
+  name: "Pitigliano",
+  coords: [42.633, 11.673],
+  img: "images/pitigliano.jpg",
+  info: "Pitigliano, known as Little Jerusalem, is dramatically built into volcanic tuff rock and has a long‑standing Jewish heritage alongside striking medieval architecture."
+ },
+ {
+  km: 1635,
+  name: "Civita di Bagnoregio",
+  coords: [42.627, 12.107],
+  img: "images/civita_di_bagnoregio.jpg",
+  info: "Civita di Bagnoregio is an ancient hilltop village with Etruscan origins, now famous as the 'dying town' due to erosion steadily reducing its size."
+ },
+ {
+  km: 1680,
+  name: "Amelia",
+  type: "finish",
+  coords: [42.553, 12.412],
+  img: "images/amelia.jpg",
+  info: "Amelia is a historic town dating back to pre‑Roman times, notable for its massive polygonal walls built between the 6th and 4th centuries BC."
+ }
+];
+
+
+const route = milestones.map(m => m.coords);
+L.polyline(route,{ color:"#555", weight:4 }).addTo(map);
+
+milestones.forEach(m => {
+
+  let label = "";
+  let markerOptions = {};
+
+  if (m.type === "start") {
+    label = "START – ";
+    markerOptions.icon = startIcon;
+  }
+
+  if (m.type === "finish") {
+    label = "FINISH – ";
+    markerOptions.icon = finishIcon;
+  }
+
+  const popup = `
+    <div class="popup-content">
+      <h3>${label}${m.name} – ${m.km} km</h3>
+      <p>${m.info}</p>
+      <img src="${m.img}" alt="${m.name}">
+    </div>
+  `;
+
+  L.marker(m.coords, markerOptions).addTo(map).bindPopup(popup);
+});
+
+// --------------------------------------------------
+// TEAM & INDIVIDUAL DATA (EDIT DISTANCES HERE)
+// --------------------------------------------------
+const teams = [
+  {
+    name: "Red Team",
+    colour: "red",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  },
+  {
+    name: "Blue Team",
+    colour: "blue",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  },
+  {
+    name: "Green Team",
+    colour: "green",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  },
+  {
+    name: "Yellow Team",
+    colour: "yellow",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  },
+  {
+    name: "Purple Team",
+    colour: "purple",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  },
+  {
+    name: "Orange Team",
+    colour: "orange",
+    members: [
+      { name: "Member 1", km: 0 },
+      { name: "Member 2", km: 0 },
+      { name: "Member 3", km: 0 },
+      { name: "Member 4", km: 0 },
+      { name: "Member 5", km: 0 }
+    ]
+  }
+];
+
+// --------------------------------------------------
+// ADD INDIVIDUAL MARKERS (SMOOTH ALONG ROUTE ✅)
+// --------------------------------------------------
+teams.forEach((team, teamIndex) => {
+
+  team.members.forEach((member, memberIndex) => {
+
+    let start = milestones[0];
+    let end = milestones[milestones.length - 1];
+
+    for (let i = 0; i < milestones.length - 1; i++) {
+      if (
+        member.km >= milestones[i].km &&
+        member.km < milestones[i + 1].km
+      ) {
+        start = milestones[i];
+        end = milestones[i + 1];
+        break;
+      }
+    }
+
+    // % progress between milestones
+    const progress =
+      (member.km - start.km) / (end.km - start.km);
+
+    const lat =
+      start.coords[0] +
+      (end.coords[0] - start.coords[0]) * progress;
+
+    const lng =
+      start.coords[1] +
+      (end.coords[1] - start.coords[1]) * progress;
+
+    // offset so markers don’t overlap
+    const offsetLat = lat + memberIndex * 0.00025;
+    const offsetLng = lng + teamIndex * 0.00025;
+
+    L.circleMarker([offsetLat, offsetLng], {
+      radius: 8,
+      color: team.colour,
+      fillColor: team.colour,
+      fillOpacity: 0.95,
+      weight: 2
+    })
+    .addTo(map)
+    .bindPopup(`
+      <strong>${member.name}</strong><br>
+      Team: ${team.name}<br>
+      Distance: ${member.km} km
+    `);
+
+  });
+});
+
+// --------------------------------------------------
+// TOP 3 INDIVIDUAL LEADERBOARD (PODIUM 🥇🥈🥉)
+// --------------------------------------------------
+function renderIndividualPodium() {
+  const board = document.getElementById("individualLeaderboard");
+
+  const medals = ["🥇", "🥈", "🥉"];
+
+  // Flatten all individuals into one list
+  const allIndividuals = teams.flatMap(team =>
+    team.members.map(member => ({
+      name: member.name,
+      km: member.km
+    }))
+  );
+
+  // Top 3 by distance
+  const topThree = allIndividuals
+    .sort((a, b) => b.km - a.km)
+    .slice(0, 3);
+
+  board.innerHTML = "<h4>Top 3 Individuals</h4>";
+
+  topThree.forEach((person, index) => {
+    const row = document.createElement("div");
+    row.className = "leaderboard-item";
+
+    row.innerHTML = `
+      <div>
+        <strong>${medals[index]} ${person.name}</strong>
+      </div>
+      <strong>${person.km} km</strong>
+    `;
+
+    board.appendChild(row);
+  });
+}
+
+// run once
+renderIndividualPodium();
+</script>
+
+</body>
+</html>

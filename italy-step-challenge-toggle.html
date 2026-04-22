@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Italy Step Challenge</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toggle-bar {
+    background: #f2f2f2;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .toggle-bar button {
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #ddd;
+  }
+
+  .toggle-bar button.active {
+    background: #0078d4;
+    color: white;
+    font-weight: bold;
+  }
+
+  .map-container {
+    flex: 1;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: none;
+  }
+
+  iframe.active {
+    display: block;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="toggle-bar">
+  <button id="teamBtn" class="active">👥 Team Progress</button>
+  <button id="individualBtn">🏃 Individual Progress</button>
+</div>
+
+<div class="map-container">
+  <iframe
+    id="teamMap"
+    class="active"
+    src="Italy_Virtual_Step_Challenge_Map_FIXED.html">
+  </iframe>
+
+  <iframe
+    id="individualMap"
+    src="italy-challenge-individual-tracker.html">
+  </iframe>
+</div>
+
+<script>
+  const teamBtn = document.getElementById("teamBtn");
+  const individualBtn = document.getElementById("individualBtn");
+  const teamMap = document.getElementById("teamMap");
+  const individualMap = document.getElementById("individualMap");
+
+  teamBtn.addEventListener("click", () => {
+    teamBtn.classList.add("active");
+    individualBtn.classList.remove("active");
+
+    teamMap.classList.add("active");
+    individualMap.classList.remove("active");
+  });
+
+  individualBtn.addEventListener("click", () => {
+    individualBtn.classList.add("active");
+    teamBtn.classList.remove("active");
+
+    individualMap.classList.add("active");
+    teamMap.classList.remove("active");
+  });
+</script>
+
+</body>
+</html>
