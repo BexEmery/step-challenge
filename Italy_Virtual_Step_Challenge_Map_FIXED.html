@@ -82,7 +82,13 @@
  <div class="legend-item"><span class="legend-colour" style="background:yellow"></span>Yellow Team</div>
  <div class="legend-item"><span class="legend-colour" style="background:purple"></span>Purple Team</div>
  <div class="legend-item"><span class="legend-colour" style="background:orange"></span>Orange Team</div>
+<div class="legend-item">
+  <span class="legend-colour" style="background:turquoise"></span>Turquoise Team
 </div>
+<div class="legend-item">
+  <span class="legend-colour" style="background:grey"></span>Grey Team
+</div>
+
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -235,8 +241,13 @@ const teams = [
   { name: "Green Team", colour: "green", km: 0 },
   { name: "Yellow Team", colour: "yellow", km: 0 },
   { name: "Purple Team", colour: "purple", km: 0 },
-  { name: "Orange Team", colour: "orange", km: 0 }
+  { name: "Orange Team", colour: "orange", km: 0 },
+
+  // ✅ NEW TEAMS
+  { name: "Turquoise Team", colour: "turquoise", km: 0 },
+  { name: "Grey Team", colour: "grey", km: 0 }
 ];
+
 
 // --------------------------------------------------
 // ADD TEAM MARKERS WITH CORRECT INTERPOLATION ✅
