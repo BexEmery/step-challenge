@@ -93,6 +93,12 @@
 <div class="legend-item">
   <span class="legend-colour" style="background:grey"></span>Grey Team
 </div>
+<div class="legend-item">
+  <span class="legend-colour" style="background:pink"></span>Pink Team
+</div>
+<div class="legend-item">
+  <span class="legend-colour" style="background:maroon"></span>Burgundy Team
+</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -245,88 +251,110 @@ const teams = [
     name: "Red Team",
     colour: "red",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Steve Hulme", km: 46.9 },
+      { name: "Mark Redfern", km: 0.01 },
+      { name: "Mandy Clowes", km: 83.9 },
+      { name: "Nick Hulme", km: 78.9 },
+      { name: "Sam Martin", km: 27.4 }
     ]
   },
   {
     name: "Blue Team",
     colour: "blue",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Lexie Turner", km: 12.2 },
+      { name: "Steven Savin", km: 47.2 },
+      { name: "Georgia Leese", km: 8.8 },
+      { name: "Amity Turner", km: 59.9 },
+      { name: "Rob", km: 0 }
     ]
   },
   {
     name: "Green Team",
     colour: "green",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Paul Hughs", km: 51 },
+      { name: "Susan Jenkins", km: 36.5 },
+      { name: "Jenny Simpson", km: 24.3 },
+      { name: "Lily-Rose Hobson", km: 14.3 },
+      { name: "Michelle W", km: 0 }
     ]
   },
   {
     name: "Yellow Team",
     colour: "yellow",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Steven Chappell", km: 33.2 },
+      { name: "Harry Goodwin", km: 63.3 },
+      { name: "Jane Eyre", km: 37 },
+      { name: "Sam Clewes", km: 18.4 },
+      { name: "Steve James", km: 35.4 }
     ]
   },
   {
     name: "Purple Team",
     colour: "purple",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Ant Brough", km: 18.2 },
+      { name: "Michelle Spped", km: 90.8 },
+      { name: "Sam Horler", km: 23.5 },
+      { name: "David Dodson", km: 20.4 },
+      { name: "Jon Bailey", km: 41.3 }
     ]
   },
   {
     name: "Orange Team",
     colour: "orange",
     members: [
-      { name: "Member 1", km: 0 },
-      { name: "Member 2", km: 0 },
-      { name: "Member 3", km: 0 },
-      { name: "Member 4", km: 0 },
-      { name: "Member 5", km: 0 }
+      { name: "Lisa Walker", km: 65.4 },
+      { name: "Rachel Berry", km: 40.8 },
+      { name: "Debs Bannister", km: 44.1 },
+      { name: "Kerry Alexander", km: 4.2 },
+      { name: "Sophie DenleyHunt", km: 38.2 }
     ]
   },
 {
   name: "Turquoise Team",
   colour: "turquoise",
   members: [
-    { name: "Member 1", km: 0 },
-    { name: "Member 2", km: 0 },
-    { name: "Member 3", km: 0 },
-    { name: "Member 4", km: 0 },
-    { name: "Member 5", km: 0 }
+    { name: "Jason Abbott", km: 14.6 },
+    { name: "Alex Nicholls", km: 47.5 },
+    { name: "Mandy Lancaster", km: 63.6 },
+    { name: "Vicky Milligan", km: 73.9 },
+    { name: "Andrew Williams", km: 58.4 }
   ]
 },
 {
   name: "Grey Team",
   colour: "grey",
   members: [
-    { name: "Member 1", km: 0 },
-    { name: "Member 2", km: 0 },
-    { name: "Member 3", km: 0 },
-    { name: "Member 4", km: 0 },
-    { name: "Member 5", km: 0 }
+    { name: "Lesley Hayes", km: 59.5 },
+    { name: "Liz Sacca", km: 34.2 },
+    { name: "Ian Lowles", km: 68.6 },
+    { name: "Dave A", km: 11.3 },
+    { name: "Claire Streeton", km: 31.8 }
+  ]
+},
+{
+  name: "Pink Team",
+  colour: "pink",
+  members: [
+    { name: "Neil Thornton", km: 38.8 },
+    { name: "Pascale Louis-Louisy", km: 30.3 },
+    { name: "Nikki Dring", km: 58.8 },
+    { name: "Helen Ford", km: 42.5 },
+    { name: "George Vestey", km: 0 }
+  ]
+},
+{
+  name: "Burgundy Team",
+  colour: "maroon",
+  members: [
+    { name: "Bex Emery", km: 35.1 },
+    { name: "David Sayer", km: 56.6 },
+    { name: "Hannah Bond", km: 32.7 },
+    { name: "Pam Rowan", km: 18.9 },
+    { name: "Helen Miller", km: 29.2 }
   ]
 }
 ];
@@ -365,11 +393,11 @@ teams.forEach((team, teamIndex) => {
       (end.coords[1] - start.coords[1]) * progress;
 
     // offset so markers don’t overlap
-    const offsetLat = lat + memberIndex * 0.00025;
-    const offsetLng = lng + teamIndex * 0.00025;
+    const offsetLat = lat + memberIndex * 0.0015;
+const offsetLng = lng + teamIndex * 0.0015;
 
     L.circleMarker([offsetLat, offsetLng], {
-      radius: 8,
+      radius: 10,
       color: team.colour,
       fillColor: team.colour,
       fillOpacity: 0.95,
